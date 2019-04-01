@@ -1,13 +1,20 @@
 - name: "NOTSCORED | 6.1.1 | PATCH | Audit system file permissions"
-  command: /bin/true
-  changed_when: no
+  cron:
+      name: "Audit system file permissions"
+      cron_file: "{{ rhel7cis_file_permissions_cron['cron_file'] }}"
+      user: "{{ rhel7cis_file_permissions_cron['cron_user'] }}"
+      minute: "{{ rhel7cis_file_permissions_cron['file_permissions_minute'] | default('0') }}"
+      hour: "{{ rhel7cis_file_permissions_cron['file_permissions_hour'] | default('5') }}"
+      day: "{{ rhel7cis_file_permissions_cron['file_permissions_day'] | default('*') }}"
+      month: "{{ rhel7cis_file_permissions_cron['file_permissions_month'] | default('*') }}"
+      weekday: "{{ rhel7cis_file_permissions_cron['file_permissions_weekday'] | default('*') }}"
+      job: "{{ rhel7cis_file_permissions_cron['file_permissions_job'] }}"
   when:
       - rhel7cis_rule_6_1_1
   tags:
       - level2
       - patch
       - rule_6.1.1
-      - notimplemented
 
 - name: "SCORED | 6.1.2 | PATCH | Ensure permissions on /etc/passwd are configured"
   file:
@@ -112,7 +119,7 @@
       dest: /etc/gshadow-
       owner: root
       group: root
-      mode: 0600
+      mode: 0000
   when:
       - rhel7cis_rule_6_1_9
   tags:
